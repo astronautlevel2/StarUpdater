@@ -81,7 +81,6 @@ function main()
     Screen.debugPrint(5,170, "Aurora Wright for her amazing CFW", white, TOP_SCREEN)
     Screen.debugPrint(5,185, "Rinnegatamante for lpp-3ds", white, TOP_SCREEN)
     Screen.debugPrint(5,200, "Hamcha for the idea", white, TOP_SCREEN)
-    Screen.debugPrint(5,215, "LiquidFenrir for the Lua updater", white, TOP_SCREEN)
     Screen.waitVblankStart()
     Screen.flip()
     while true do

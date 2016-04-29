@@ -8,7 +8,7 @@ Usage is simple: copy the 3ds folder onto the root of your SD, then use the home
 
 If you use a custom path, edit /3ds/LumaUpdater/index.lua, and change the variable "a9lh_path" to your custom path (include the foward slash!)
 
-This currently supports custom paths and path changing patch, and both hourlies and stable releases!
+This currently supports custom paths and path changing patch, and both hourlies and stable releases! In addition, it supports making and restoring backups of arm9loaderhax.bin!
 
 ## Credits
  * Thanks to Rinnegatamante for lpp-3ds, which this depends upon

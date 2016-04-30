@@ -49,3 +49,6 @@ Builder/*.lua
 Builder/*.bat
 Builder/romfs
 Builder/*.cia
+
+LumaUpdater.3dsx
+LumaUpdater.smdh

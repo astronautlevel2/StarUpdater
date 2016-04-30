@@ -5,6 +5,13 @@ local luma_path = "/luma9loaderhax.bin"
 local a9lh_path = "/arm9loaderhax.bin" --max length 38 characters including the first slash. if bigger, the path inside the .bin wont be changed
 local backup_path = a9lh_path..".bak"
  
+function readConfig(fileName)
+    if (System.doesFileExist(fileName)) then
+        local file = io.open(fileName, FREAD)
+        a9lh_path = io.read(file, 0, io.size(file))
+    end 
+end
+
 function unicodify(str)
     local new_str = ""
     for i = 1, #str,1 do
@@ -71,6 +78,7 @@ end
  
 function main()
     Screen.refresh()
+    readConfig("luma/update.cfg")
     Screen.debugPrint(5,5, "Welcome to the Luma3DS updater!", white, TOP_SCREEN)
     Screen.debugPrint(5,20, "Press A to update stable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,35, "Press X to update unstable Luma3DS", white, TOP_SCREEN)

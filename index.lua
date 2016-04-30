@@ -1,9 +1,10 @@
 local white = Color.new(255,255,255)
-local hourlyUrl = "http://luma3ds.ericchu.net/latest/arm9loaderhax.bin"
-local stableUrl = "http://luma3ds.ericchu.net/release/arm9loaderhax.bin"
-local luma_path = "/luma9loaderhax.bin"
+local hourlyUrl = "http://astronautlevel2.github.io/Luma3DS/latest.zip"
+local stableUrl = "http://astronautlevel2.github.io/Luma3DS/release.zip"
 local a9lh_path = "/arm9loaderhax.bin" --max length 38 characters including the first slash. if bigger, the path inside the .bin wont be changed
+local zip_path = "/Luma3DS.zip"
 local backup_path = a9lh_path..".bak"
+
  
 function readConfig(fileName)
     if (System.doesFileExist(fileName)) then
@@ -37,18 +38,20 @@ function path_changer()
 end
 
 function update(site)
+    backup_path = a9lh_path..".bak"
     Screen.refresh()
     Screen.clear(TOP_SCREEN)
     Screen.waitVblankStart()
     Screen.flip()
     if Network.isWifiEnabled() then
-        Screen.debugPrint(5,5, "Downloading Luma3DS", white, TOP_SCREEN)
-        Network.downloadFile(site, luma_path)
+        Screen.debugPrint(5,5, "Downloading Latest Zip", white, TOP_SCREEN)
+        Network.downloadFile(site, zip_path)
         Screen.debugPrint(5,20, "File downloaded!", white, TOP_SCREEN)
         Screen.debugPrint(5,35, "Backing up arm9loaderhax.bin...", white, TOP_SCREEN)
         System.renameFile(a9lh_path, backup_path)
+        System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", a9lh_path)
         Screen.debugPrint(5,50, "Moving to payload location...", white, TOP_SCREEN)
-        System.renameFile(luma_path, a9lh_path)
+        System.deleteFile(zip_path)
         Screen.debugPrint(5,65, "Changing path for reboot patch", white, TOP_SCREEN)
         path_changer()
         Screen.debugPrint(5,80, "Done!", white, TOP_SCREEN)

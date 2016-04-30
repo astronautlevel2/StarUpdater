@@ -41,3 +41,11 @@ luac.out
 *.x86_64
 *.hex
 
+# Other Stuff
+
+Builder/*.bin
+Builder/*.rsf
+Builder/*.lua
+Builder/*.bat
+Builder/romfs
+Builder/*.cia

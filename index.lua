@@ -10,7 +10,8 @@ function readConfig(fileName)
     if (System.doesFileExist(fileName)) then
         local file = io.open(fileName, FREAD)
         a9lh_path = io.read(file, 0, io.size(file))
-    end 
+        backup_path = a9lh_path..".bak"
+    end
 end
 
 function unicodify(str)
@@ -38,16 +39,18 @@ function path_changer()
 end
 
 function update(site)
-    backup_path = a9lh_path..".bak"
     Screen.refresh()
     Screen.clear(TOP_SCREEN)
     Screen.waitVblankStart()
     Screen.flip()
     if Network.isWifiEnabled() then
-        Screen.debugPrint(5,5, "Downloading Latest Zip", white, TOP_SCREEN)
+        Screen.debugPrint(5,5, "Update path: "..a9lh_path, white, TOP_SCREEN)
         Network.downloadFile(site, zip_path)
         Screen.debugPrint(5,20, "File downloaded!", white, TOP_SCREEN)
         Screen.debugPrint(5,35, "Backing up arm9loaderhax.bin...", white, TOP_SCREEN)
+        if (System.doesFileExist(backup_path)) then
+            System.deleteFile(backup_path)
+        end
         System.renameFile(a9lh_path, backup_path)
         System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", a9lh_path)
         Screen.debugPrint(5,50, "Moving to payload location...", white, TOP_SCREEN)
@@ -81,7 +84,7 @@ end
  
 function main()
     Screen.refresh()
-    readConfig("luma/update.cfg")
+    readConfig("/luma/update.cfg")
     Screen.debugPrint(5,5, "Welcome to the Luma3DS updater!", white, TOP_SCREEN)
     Screen.debugPrint(5,20, "Press A to update stable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,35, "Press X to update unstable Luma3DS", white, TOP_SCREEN)
@@ -124,7 +127,7 @@ function main()
                     end
                 end
             else
-                Screen.debugPrint(5,5, "You don't have a backup to restore", white, TOP_SCREEN)
+                Screen.debugPrint(5,5, "Backup path: "..backup_path, white, TOP_SCREEN)
                 Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
                 while true do
                     pad = Controls.read()

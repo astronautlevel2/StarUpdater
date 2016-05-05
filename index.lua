@@ -21,6 +21,27 @@ function unicodify(str)
     end
     return new_str
 end
+
+function getVer(path)
+	local searchString = "Luma3DS v"
+	local verString = ""
+	local isDone = false
+	local file = io.open(path, FREAD)
+	local fileData = io.read(file, 0, io.size(file))
+	io.close(file)
+	local offset = string.find(fileData, searchString)
+	offset = offset + string.len(searchString)
+	while(isDone == false)
+	do
+		bitRead = fileData:sub(offset,offset)
+		if bitRead == " " then
+			isDone = true
+		else
+			verString = verString..bitRead
+		end
+		offset = offset + 1
+	end
+end
  
 function path_changer()
     local file = io.open(a9lh_path, FREAD)
@@ -90,6 +111,7 @@ function main()
     Screen.debugPrint(5,35, "Press X to update unstable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,50, "Press B to restore a Luma3DS backup", white, TOP_SCREEN)
     Screen.debugPrint(5,65, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
+    Screen.debugPrint(5,80, "Current Luma3DS version: "..getVer(a9lh_path), white, TOP_SCREEN)
     Screen.debugPrint(5,140, "Thanks to:", white, TOP_SCREEN)
     Screen.debugPrint(5,155, "astro and ericchu for the builds", white, TOP_SCREEN)
     Screen.debugPrint(5,170, "Aurora Wright for her amazing CFW", white, TOP_SCREEN)

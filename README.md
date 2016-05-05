@@ -16,3 +16,4 @@ This currently supports custom paths and path changing patch, and both hourlies 
  * Thanks to Rinnegatamante for lpp-3ds, which this depends upon
  * Thanks to Aurora Wright for the awesome CFW
  * Thanks to Ericchu for rehosting my payloads in a more usable format
+ * Thanks to @squee666, or /u/izylock for making the banner and icon

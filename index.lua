@@ -5,12 +5,30 @@ local payload_path = "/arm9loaderhax.bin" --max length 38 characters including t
 local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
- 
+local isMenuhax = false
+
 function readConfig(fileName)
+    if (isMenuhax) then
+        payload_path = "/Luma3DS.dat"
+        backup_path = payload_path..".bak"
+        return
+    end
     if (System.doesFileExist(fileName)) then
         local file = io.open(fileName, FREAD)
         payload_path = io.read(file, 0, io.size(file))
         backup_path = payload_path..".bak"
+    elseif (not System.doesFileExist(fileName) and not isMenuhax) then
+        payload_path = "/arm9loaderhax.bin"
+        backup_path = payload_path..".bak"
+        return
+    end
+end
+
+function getMode()
+    if (isMenuhax) then
+        return "Menuhax"
+    else
+        return "a9lh"
     end
 end
 
@@ -20,30 +38,34 @@ function unicodify(str)
         new_str = new_str..string.sub(str,i,i)..string.char(00)
     end
     return new_str
-end    
+end
 
 function getVer(path)
-	local searchString = "Luma3DS v"
+	local searchString = "Luma3DS "
 	local verString = ""
 	local isDone = false
-	local file = io.open(path, FREAD)
-	local fileData = io.read(file, 0, io.size(file))
-	io.close(file)
-	local offset = string.find(fileData, searchString)
-	offset = offset + string.len(searchString)
-	while(isDone == false)
-	do
-		bitRead = fileData:sub(offset,offset)
-		if bitRead == " " then
-			isDone = true
-		else
-			verString = verString..bitRead
-		end
-		offset = offset + 1
-	end
-    return verString
+    if (System.doesFileExist(path) == true) then
+        local file = io.open(path, FREAD)
+        local fileData = io.read(file, 0, io.size(file))
+        io.close(file)
+        local offset = string.find(fileData, searchString)
+        offset = offset + string.len(searchString)
+        while(isDone == false)
+        do
+            bitRead = fileData:sub(offset,offset)
+            if bitRead == " " then
+                isDone = true
+            else
+                verString = verString..bitRead
+            end
+            offset = offset + 1
+        end
+        return verString
+    else
+        return "Config error!"
+    end
 end
- 
+
 function path_changer()
     local file = io.open(payload_path, FREAD)
     local a9lh_data = io.read(file, 0, io.size(file))
@@ -60,7 +82,7 @@ function path_changer()
     end
 end
 
-function update(site, isMenuhax)
+function update(site)
     Screen.refresh()
     Screen.clear(TOP_SCREEN)
     Screen.waitVblankStart()
@@ -72,7 +94,9 @@ function update(site, isMenuhax)
         if (System.doesFileExist(backup_path)) then
             System.deleteFile(backup_path)
         end
-        System.renameFile(payload_path, backup_path)
+        if (System.doesFileExist(payload_path)) then
+            System.renameFile(payload_path, backup_path)
+        end
         if (isMenuhax == false) then
             System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", payload_path)
             Screen.debugPrint(5,35, "Moving to payload location...", white, TOP_SCREEN)
@@ -80,16 +104,13 @@ function update(site, isMenuhax)
             Screen.debugPrint(5,50, "Changing path for reboot patch", white, TOP_SCREEN)
             path_changer()
         elseif (isMenuhax == true) then
+            Screen.debugPrint(5,35, "Moving to payload location...", white, TOP_SCREEN)
             System.extractFromZIP(zip_path, "out/Luma3DS.dat", "/Luma3DS.dat")
             System.deleteFile(zip_path)
         end
-        Screen.refresh()
-        Screen.clear(TOP_SCREEN)
-        Screen.waitVblankStart()
-        Screen.flip()
-        Screen.debugPrint(5,5, "Done!", white, TOP_SCREEN)
-        Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
-        Screen.debugPrint(5,35, "Press SELECT to reboot", white, TOP_SCREEN)
+        Screen.debugPrint(5,65, "Done!", white, TOP_SCREEN)
+        Screen.debugPrint(5,80, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
+        Screen.debugPrint(5,95, "Press SELECT to reboot", white, TOP_SCREEN)
         while true do
             pad = Controls.read()
             if Controls.check(pad,KEY_START) then
@@ -100,7 +121,7 @@ function update(site, isMenuhax)
                 System.reboot()
             end
         end
-        
+
     else
         Screen.debugPrint(5,5, "WiFi is off! Please turn it on and retry!", white, TOP_SCREEN)
         Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
@@ -114,7 +135,7 @@ function update(site, isMenuhax)
         end
     end
 end
- 
+
 function main()
     Screen.refresh()
     readConfig("/luma/update.cfg")
@@ -122,14 +143,14 @@ function main()
     Screen.debugPrint(5,20, "Press A to update stable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,35, "Press X to update unstable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,50, "Press B to restore a Luma3DS backup", white, TOP_SCREEN)
-    Screen.debugPrint(5,65, "Press Y to update to latest stable Menuhax", white, TOP_SCREEN)
+    Screen.debugPrint(5,65, "Press Y to switch between a9lh and menuhax", white, TOP_SCREEN)
     Screen.debugPrint(5,80, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
     Screen.debugPrint(5,95, "Your Luma3DS version: "..getVer(payload_path), white, TOP_SCREEN)
     Screen.debugPrint(5,110, "Latest Luma3DS version: "..Network.requestString(remoteVer), white, TOP_SCREEN)
-    Screen.debugPrint(5,140, "Thanks to:", white, TOP_SCREEN)
-    Screen.debugPrint(5,155, "Aurora Wright for her amazing CFW", white, TOP_SCREEN)
-    Screen.debugPrint(5,170, "Rinnegatamante for lpp-3ds", white, TOP_SCREEN)
-    Screen.debugPrint(5,185, "Hamcha for the idea", white, TOP_SCREEN)
+    Screen.debugPrint(5,125, "Current mode: "..getMode(), white, TOP_SCREEN)
+    if (not isMenuhax) then
+        Screen.debugPrint(5, 140, "Install dir: "..payload_path, white, TOP_SCREEN)
+    end
     Screen.waitVblankStart()
     Screen.flip()
     while true do
@@ -139,11 +160,14 @@ function main()
             Screen.flip()
             System.exit()
         elseif Controls.check(pad,KEY_A) then
-            update(stableUrl, false)
+            update(stableUrl)
         elseif Controls.check(pad,KEY_X) then
-            update(hourlyUrl, false)
+            update(hourlyUrl)
         elseif Controls.check(pad,KEY_Y) then
-            update(stableUrl, true)
+            isMenuhax = not isMenuhax
+            readConfig("/luma/update.cfg")
+            Screen.clear(TOP_SCREEN)
+            main()
         elseif Controls.check(pad,KEY_B) then
             Screen.refresh()
             Screen.clear(TOP_SCREEN)
@@ -178,5 +202,5 @@ function main()
         end
     end
 end
- 
+
 main()

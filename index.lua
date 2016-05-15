@@ -4,7 +4,7 @@ local stableUrl = "http://astronautlevel2.github.io/Luma3DS/release.zip"
 local a9lh_path = "/arm9loaderhax.bin" --max length 38 characters including the first slash. if bigger, the path inside the .bin wont be changed
 local zip_path = "/Luma3DS.zip"
 local backup_path = a9lh_path..".bak"
-
+local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
  
 function readConfig(fileName)
     if (System.doesFileExist(fileName)) then
@@ -20,7 +20,7 @@ function unicodify(str)
         new_str = new_str..string.sub(str,i,i)..string.char(00)
     end
     return new_str
-end
+end    
 
 function getVer(path)
 	local searchString = "Luma3DS v"
@@ -41,6 +41,7 @@ function getVer(path)
 		end
 		offset = offset + 1
 	end
+    return verString
 end
  
 function path_changer()
@@ -111,7 +112,8 @@ function main()
     Screen.debugPrint(5,35, "Press X to update unstable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(5,50, "Press B to restore a Luma3DS backup", white, TOP_SCREEN)
     Screen.debugPrint(5,65, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
-    Screen.debugPrint(5,80, "Current Luma3DS version: "..getVer(a9lh_path), white, TOP_SCREEN)
+    Screen.debugPrint(5,80, "Your Luma3DS version: "..getVer(a9lh_path), white, TOP_SCREEN)
+    Screen.debugPrint(5,95, "Latest Luma3DS version: "..Network.requestString(remoteVer), white, TOP_SCREEN)
     Screen.debugPrint(5,140, "Thanks to:", white, TOP_SCREEN)
     Screen.debugPrint(5,155, "astro and ericchu for the builds", white, TOP_SCREEN)
     Screen.debugPrint(5,170, "Aurora Wright for her amazing CFW", white, TOP_SCREEN)

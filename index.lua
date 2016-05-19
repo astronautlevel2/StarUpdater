@@ -67,18 +67,22 @@ function getVer(path)
         local fileData = io.read(file, 0, io.size(file))
         io.close(file)
         local offset = string.find(fileData, searchString)
-        offset = offset + string.len(searchString)
-        while(isDone == false)
-        do
-            bitRead = fileData:sub(offset,offset)
-            if bitRead == " " then
-                isDone = true
-            else
-                verString = verString..bitRead
+        if (offset ~= nil) then
+            offset = offset + string.len(searchString)
+            while(isDone == false)
+            do
+                bitRead = fileData:sub(offset,offset)
+                if bitRead == " " then
+                    isDone = true
+                else
+                    verString = verString..bitRead
+                end
+                offset = offset + 1
             end
-            offset = offset + 1
+            return verString
+        else
+            return "Config error!"
         end
-        return verString
     else
         return "Config error!"
     end
@@ -217,9 +221,9 @@ function main()
                 Screen.waitVblankStart()
                 Screen.flip()
                 if System.doesFileExist(backup_path) then
-                    Screen.debugPrint(5,5, "Deleting new arm9loaderhax.bin...", white, TOP_SCREEN)
+                    Screen.debugPrint(5,5, "Deleting new payload...", white, TOP_SCREEN)
                     System.deleteFile(payload_path)
-                    Screen.debugPrint(5,20, "Renaming backup to arm9loaderhax.bin...", white, TOP_SCREEN)
+                    Screen.debugPrint(5,20, "Renaming backup to "..payload_path.."...", white, TOP_SCREEN)
                     System.renameFile(backup_path, payload_path)
                     Screen.debugPrint(5,35, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
                     while true do

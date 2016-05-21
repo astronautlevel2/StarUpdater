@@ -125,7 +125,7 @@ function getVer(path)
         end
     else
         if Network.isWifiEnabled() then
-            return Network.requestString(remoteVer).."-"..Network.requestString(remoteNum).."-"..Network.requestString(remoteCommit)
+            return Network.requestString(remoteVer).."-"..Network.requestString(remoteCommit)
         else
             return "No connection!"
         end

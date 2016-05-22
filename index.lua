@@ -11,7 +11,7 @@ local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
-local latestCIA = "http://github.com/astronautlevel2/Luma3DS/blob/gh-pages/Updater.CIA?raw=true"
+local latestCIA = "http://www.ataber.pw/u"
 local curPos = 20
 local isMenuhax = false
 local isDev = false
@@ -206,8 +206,9 @@ function update(site)
 end
 
 function main()
-    Screen.refresh()
     readConfig("/luma/update.cfg")
+    Screen.refresh()
+    Screen.clear(TOP_SCREEN)
     Screen.debugPrint(5,5, "Welcome to the StarUpdater!", yellow, TOP_SCREEN)
     Screen.debugPrint(0, curPos, "->", white, TOP_SCREEN)
     Screen.debugPrint(30,20, "Update stable Luma3DS", white, TOP_SCREEN)
@@ -222,7 +223,6 @@ function main()
     if (not isMenuhax) then
         Screen.debugPrint(5, 175, "Install dir: "..payload_path, white, TOP_SCREEN)
     end
-    Screen.waitVblankStart()
     Screen.flip()
     while true do
         pad = Controls.read()
@@ -231,13 +231,11 @@ function main()
             if Controls.check(pad,KEY_DDOWN) then
                 if (curPos < 110) then
                     curPos = curPos + 15
-                    Screen.clear(TOP_SCREEN)
                     main()
                 end
             elseif Controls.check(pad,KEY_DUP) then
                 if (curPos > 20) then
                     curPos = curPos - 15
-                    Screen.clear(TOP_SCREEN)
                     main()
                 end
             elseif Controls.check(pad,KEY_A) then
@@ -257,12 +255,10 @@ function main()
                     restoreBackup()
                 elseif (curPos == 65) then
                     isDev = not isDev
-                    Screen.clear(TOP_SCREEN)
                     main()
                 elseif (curPos == 80) then
                     isMenuhax = not isMenuhax
                     readConfig("/luma/update.cfg")
-                    Screen.clear(TOP_SCREEN)
                     main()
                 elseif (curPos == 95) then
                     Screen.waitVblankStart()

@@ -1,4 +1,7 @@
 local white = Color.new(255,255,255)
+local yellow = Color.new(255,205,66)
+local red = Color.new(255,0,0)
+local green = Color.new(55,255,0)
 local hourlyUrl = "http://astronautlevel2.github.io/Luma3DS/latest.zip"
 local stableUrl = "http://astronautlevel2.github.io/Luma3DS/release.zip"
 local hourlyDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/latest.zip"
@@ -37,11 +40,11 @@ function restoreBackup()
     Screen.waitVblankStart()
     Screen.flip()
     if System.doesFileExist(backup_path) then
-        Screen.debugPrint(5,5, "Deleting new payload...", white, TOP_SCREEN)
+        Screen.debugPrint(5,5, "Deleting new payload...", yellow, TOP_SCREEN)
         System.deleteFile(payload_path)
-        Screen.debugPrint(5,20, "Renaming backup to "..payload_path.."...", white, TOP_SCREEN)
+        Screen.debugPrint(5,20, "Renaming backup to "..payload_path.."...", yellow, TOP_SCREEN)
         System.renameFile(backup_path, payload_path)
-        Screen.debugPrint(5,35, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
+        Screen.debugPrint(5,35, "Press START to go back to HBL/Home menu", green, TOP_SCREEN)
         while true do
             pad = Controls.read()
                 if Controls.check(pad,KEY_START) then
@@ -51,8 +54,8 @@ function restoreBackup()
             end
         end
     else
-        Screen.debugPrint(5,5, "Backup path: "..backup_path, white, TOP_SCREEN)
-        Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
+        Screen.debugPrint(5,5, "Backup path: "..backup_path, yellow, TOP_SCREEN)
+        Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", green, TOP_SCREEN)
         while true do
             pad = Controls.read()
             if Controls.check(pad,KEY_START) then
@@ -155,8 +158,8 @@ function update(site)
     Screen.flip()
     if Network.isWifiEnabled() then
         Network.downloadFile(site, zip_path)
-        Screen.debugPrint(5,5, "File downloaded!", white, TOP_SCREEN)
-        Screen.debugPrint(5,20, "Backing up payload", white, TOP_SCREEN)
+        Screen.debugPrint(5,5, "File downloaded!", green, TOP_SCREEN)
+        Screen.debugPrint(5,20, "Backing up payload", yellow, TOP_SCREEN)
         if (System.doesFileExist(backup_path)) then
             System.deleteFile(backup_path)
         end
@@ -165,18 +168,18 @@ function update(site)
         end
         if (isMenuhax == false) then
             System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", payload_path)
-            Screen.debugPrint(5,35, "Moving to payload location...", white, TOP_SCREEN)
+            Screen.debugPrint(5,35, "Moving to payload location...", yellow, TOP_SCREEN)
             System.deleteFile(zip_path)
-            Screen.debugPrint(5,50, "Changing path for reboot patch", white, TOP_SCREEN)
+            Screen.debugPrint(5,50, "Changing path for reboot patch", yellow, TOP_SCREEN)
             path_changer()
         elseif (isMenuhax == true) then
-            Screen.debugPrint(5,35, "Moving to payload location...", white, TOP_SCREEN)
+            Screen.debugPrint(5,35, "Moving to payload location...", yellow, TOP_SCREEN)
             System.extractFromZIP(zip_path, "out/Luma3DS.dat", "/Luma3DS.dat")
             System.deleteFile(zip_path)
         end
-        Screen.debugPrint(5,65, "Done!", white, TOP_SCREEN)
-        Screen.debugPrint(5,80, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
-        Screen.debugPrint(5,95, "Press SELECT to reboot", white, TOP_SCREEN)
+        Screen.debugPrint(5,65, "Done!", green, TOP_SCREEN)
+        Screen.debugPrint(5,80, "Press START to go back to HBL/Home menu", green, TOP_SCREEN)
+        Screen.debugPrint(5,95, "Press SELECT to reboot", green, TOP_SCREEN)
         while true do
             pad = Controls.read()
             if Controls.check(pad,KEY_START) then
@@ -189,8 +192,8 @@ function update(site)
         end
 
     else
-        Screen.debugPrint(5,5, "WiFi is off! Please turn it on and retry!", white, TOP_SCREEN)
-        Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", white, TOP_SCREEN)
+        Screen.debugPrint(5,5, "WiFi is off! Please turn it on and retry!", red, TOP_SCREEN)
+        Screen.debugPrint(5,20, "Press START to go back to HBL/Home menu", red, TOP_SCREEN)
         while true do
             pad = Controls.read()
             if Controls.check(pad,KEY_START) then
@@ -205,13 +208,13 @@ end
 function main()
     Screen.refresh()
     readConfig("/luma/update.cfg")
-    Screen.debugPrint(5,5, "Welcome to the StarUpdater!", white, TOP_SCREEN)
+    Screen.debugPrint(5,5, "Welcome to the StarUpdater!", yellow, TOP_SCREEN)
     Screen.debugPrint(0, curPos, "->", white, TOP_SCREEN)
     Screen.debugPrint(30,20, "Update stable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(30,35, "Update unstable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(30,50, "Restore a Luma3DS backup", white, TOP_SCREEN)
-    Screen.debugPrint(30,65, "Current dev mode: "..getMode(devmode), white, TOP_SCREEN)
-    Screen.debugPrint(30,80, "Current menuhax mode: "..getMode(menuhaxmode), white, TOP_SCREEN)
+    Screen.debugPrint(30,65, "Developer mode: "..getMode(devmode), white, TOP_SCREEN)
+    Screen.debugPrint(30,80, "Install mode: "..getMode(menuhaxmode), white, TOP_SCREEN)
     Screen.debugPrint(30,95, "Go back to HBL/Home menu", white, TOP_SCREEN)
     Screen.debugPrint(30,110, "Update the updater", white, TOP_SCREEN)
     Screen.debugPrint(5,145, "Your Luma3DS version: "..getVer(payload_path), white, TOP_SCREEN)
@@ -267,10 +270,10 @@ function main()
                     System.exit()
                 elseif (curPos == 110) then
                     Screen.clear(TOP_SCREEN)
-                    Screen.debugPrint(5, 5, "Downloading new CIA...", white, TOP_SCREEN)
+                    Screen.debugPrint(5, 5, "Downloading new CIA...", yellow, TOP_SCREEN)
                     Network.downloadFile(latestCIA, "/Updater.CIA")
                     sleep(2000)
-                    Screen.debugPrint(5, 20, "Installing CIA...", white, TOP_SCREEN)
+                    Screen.debugPrint(5, 20, "Installing CIA...", yellow, TOP_SCREEN)
                     System.installCIA("/Updater.CIA", SDMC)
                     System.deleteFile("/Updater.CIA")
                     System.exit()

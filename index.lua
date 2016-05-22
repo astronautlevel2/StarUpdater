@@ -11,7 +11,7 @@ local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
-local latestCIA = "http://astronautlevel2.github.io/Luma3DS/Updater.CIA"
+local latestCIA = "http://github.com/astronautlevel2/Luma3DS/blob/gh-pages/Updater.CIA?raw=true"
 local curPos = 20
 local isMenuhax = false
 local isDev = false

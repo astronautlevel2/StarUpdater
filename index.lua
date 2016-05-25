@@ -26,6 +26,8 @@ function readConfig(fileName)
     if (System.doesFileExist(fileName)) then
         local file = io.open(fileName, FREAD)
         payload_path = io.read(file, 0, io.size(file))
+	      payload_path = string.gsub(payload_path, "\n", "")
+        payload_path = string.gsub(payload_path, "\r", "")
         backup_path = payload_path..".bak"
     elseif (not System.doesFileExist(fileName) and not isMenuhax) then
         payload_path = "/arm9loaderhax.bin"

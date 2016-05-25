@@ -16,6 +16,8 @@ local curPos = 20
 local isMenuhax = false
 local isDev = false
 local menuhaxmode, devmode = 1,2
+local localVer = ""
+local remoteVer = ""
 
 function readConfig(fileName)
     if (isMenuhax) then
@@ -26,7 +28,7 @@ function readConfig(fileName)
     if (System.doesFileExist(fileName)) then
         local file = io.open(fileName, FREAD)
         payload_path = io.read(file, 0, io.size(file))
-	      payload_path = string.gsub(payload_path, "\n", "")
+        payload_path = string.gsub(payload_path, "\n", "")
         payload_path = string.gsub(payload_path, "\r", "")
         backup_path = payload_path..".bak"
     elseif (not System.doesFileExist(fileName) and not isMenuhax) then
@@ -207,8 +209,13 @@ function update(site)
     end
 end
 
+function init()
+	readConfig("/luma/update.cfg")
+	localVer = getVer(payload_path)
+	remoteVer = getVer("remote")
+end
+
 function main()
-    readConfig("/luma/update.cfg")
     Screen.refresh()
     Screen.clear(TOP_SCREEN)
     Screen.debugPrint(5,5, "Welcome to the StarUpdater!", yellow, TOP_SCREEN)
@@ -220,8 +227,8 @@ function main()
     Screen.debugPrint(30,80, "Install mode: "..getMode(menuhaxmode), white, TOP_SCREEN)
     Screen.debugPrint(30,95, "Go back to HBL/Home menu", white, TOP_SCREEN)
     Screen.debugPrint(30,110, "Update the updater", white, TOP_SCREEN)
-    Screen.debugPrint(5,145, "Your Luma3DS version: "..getVer(payload_path), white, TOP_SCREEN)
-    Screen.debugPrint(5,160, "Latest Luma3DS version: "..getVer("remote"), white, TOP_SCREEN)
+    Screen.debugPrint(5,145, "Your Luma3DS version: "..localVer, white, TOP_SCREEN)
+    Screen.debugPrint(5,160, "Latest Luma3DS version: "..remoteVer, white, TOP_SCREEN)
     if (not isMenuhax) then
         Screen.debugPrint(5, 175, "Install dir: "..payload_path, white, TOP_SCREEN)
     end
@@ -260,7 +267,7 @@ function main()
                     main()
                 elseif (curPos == 80) then
                     isMenuhax = not isMenuhax
-                    readConfig("/luma/update.cfg")
+                    init()
                     main()
                 elseif (curPos == 95) then
                     Screen.waitVblankStart()
@@ -281,4 +288,5 @@ function main()
     end
 end
 
+init()
 main()

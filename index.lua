@@ -11,13 +11,14 @@ local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
+local remoteDevCommit = "http://astronautlevel2.github.io/Luma3DSDev/lastCommit"
 local latestCIA = "http://www.ataber.pw/u"
 local curPos = 20
 local isMenuhax = false
 local isDev = false
 local menuhaxmode, devmode = 1,2
 local localVer = ""
-local remoteVer = ""
+local remoteVerNum = ""
 
 function readConfig(fileName)
     if (isMenuhax) then
@@ -132,7 +133,11 @@ function getVer(path)
         end
     else
         if Network.isWifiEnabled() then
-            return Network.requestString(remoteVer).."-"..Network.requestString(remoteCommit)
+        	if (not isDev) then
+            	return Network.requestString(remoteVer).."-"..Network.requestString(remoteCommit)
+            else
+            	return Network.requestString(remoteVer).."-"..Network.requestString(remoteDevCommit)
+            end
         else
             return "No connection!"
         end
@@ -212,7 +217,7 @@ end
 function init()
 	readConfig("/luma/update.cfg")
 	localVer = getVer(payload_path)
-	remoteVer = getVer("remote")
+	remoteVerNum = getVer("remote")
 end
 
 function main()
@@ -228,7 +233,7 @@ function main()
     Screen.debugPrint(30,95, "Go back to HBL/Home menu", white, TOP_SCREEN)
     Screen.debugPrint(30,110, "Update the updater", white, TOP_SCREEN)
     Screen.debugPrint(5,145, "Your Luma3DS version: "..localVer, white, TOP_SCREEN)
-    Screen.debugPrint(5,160, "Latest Luma3DS version: "..remoteVer, white, TOP_SCREEN)
+    Screen.debugPrint(5,160, "Latest Luma3DS version: "..remoteVerNum, white, TOP_SCREEN)
     if (not isMenuhax) then
         Screen.debugPrint(5, 175, "Install dir: "..payload_path, white, TOP_SCREEN)
     end

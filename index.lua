@@ -20,6 +20,9 @@ local menuhaxmode, devmode = 1,2
 local localVer = ""
 local remoteVerNum = ""
 
+local pad = Controls.read()
+local oldpad = pad
+
 function readConfig(fileName)
     if (isMenuhax) then
         payload_path = "/Luma3DS.dat"
@@ -238,60 +241,60 @@ function main()
         Screen.debugPrint(5, 175, "Install dir: "..payload_path, white, TOP_SCREEN)
     end
     Screen.flip()
-    while true do
-        pad = Controls.read()
-        if pad ~= oldPad then
-            oldPad = pad
-            if Controls.check(pad,KEY_DDOWN) then
-                if (curPos < 110) then
-                    curPos = curPos + 15
-                    main()
-                end
-            elseif Controls.check(pad,KEY_DUP) then
-                if (curPos > 20) then
-                    curPos = curPos - 15
-                    main()
-                end
-            elseif Controls.check(pad,KEY_A) then
-                if (curPos == 20) then
-                    if (not isDev) then
-                        update(stableUrl)
-                    else
-                        update(stableDevUrl)
-                    end
-                elseif (curPos == 35) then
-                    if (not isDev) then
-                        update(hourlyUrl)
-                    else
-                        update(hourlyDevUrl)
-                    end
-                elseif (curPos == 50) then
-                    restoreBackup()
-                elseif (curPos == 65) then
-                    isDev = not isDev
-                    main()
-                elseif (curPos == 80) then
-                    isMenuhax = not isMenuhax
-                    init()
-                    main()
-                elseif (curPos == 95) then
-                    Screen.waitVblankStart()
-                    Screen.flip()
-                    System.exit()
-                elseif (curPos == 110) then
-                    Screen.clear(TOP_SCREEN)
-                    Screen.debugPrint(5, 5, "Downloading new CIA...", yellow, TOP_SCREEN)
-                    Network.downloadFile(latestCIA, "/Updater.CIA")
-                    sleep(2000)
-                    Screen.debugPrint(5, 20, "Installing CIA...", yellow, TOP_SCREEN)
-                    System.installCIA("/Updater.CIA", SDMC)
-                    System.deleteFile("/Updater.CIA")
-                    System.exit()
-                end
-            end
-        end
-    end
 end
 
 init()
 main()
+while true do
+        pad = Controls.read()
+        
+            
+        if Controls.check(pad,KEY_DDOWN) and not Controls.check(oldpad,KEY_DDOWN) then
+            if (curPos < 110) then
+                curPos = curPos + 15
+                main()
+            end
+        elseif Controls.check(pad,KEY_DUP) and not Controls.check(oldpad,KEY_DUP) then
+            if (curPos > 20) then
+                curPos = curPos - 15
+                main()
+            end
+        elseif Controls.check(pad,KEY_A) and not Controls.check(oldpad,KEY_A) then
+            if (curPos == 20) then
+                if (not isDev) then
+                    update(stableUrl)
+                else
+                    update(stableDevUrl)
+                end
+            elseif (curPos == 35) then
+                if (not isDev) then
+                    update(hourlyUrl)
+                else
+                    update(hourlyDevUrl)
+                end
+            elseif (curPos == 50) then
+                restoreBackup()
+            elseif (curPos == 65) then
+                isDev = not isDev
+                main()
+            elseif (curPos == 80) then
+                isMenuhax = not isMenuhax
+                init()
+                main()
+            elseif (curPos == 95) then
+                System.exit()
+            elseif (curPos == 110) then
+                Screen.clear(TOP_SCREEN)
+                Screen.debugPrint(5, 5, "Downloading new CIA...", yellow, TOP_SCREEN)
+                Network.downloadFile(latestCIA, "/Updater.CIA")
+                sleep(2000)
+                Screen.debugPrint(5, 20, "Installing CIA...", yellow, TOP_SCREEN)
+                System.installCIA("/Updater.CIA", SDMC)
+                System.deleteFile("/Updater.CIA")
+                System.exit()
+            end
+        end
+        oldpad = pad
+    end
+
+

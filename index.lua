@@ -1,3 +1,4 @@
+local starVer = "1.4"
 local white = Color.new(255,255,255)
 local yellow = Color.new(255,205,66)
 local red = Color.new(255,0,0)
@@ -19,27 +20,62 @@ local isDev = false
 local menuhaxmode, devmode = 1,2
 local localVer = ""
 local remoteVerNum = ""
+local firstTime = true
+local configMode = ""
 
 local pad = Controls.read()
 local oldpad = pad
 
 function readConfig(fileName)
-    if (isMenuhax) then
-        payload_path = "/Luma3DS.dat"
-        backup_path = payload_path..".bak"
-        return
-    end
-    if (System.doesFileExist(fileName)) then
-        local file = io.open(fileName, FREAD)
-        payload_path = io.read(file, 0, io.size(file))
-        payload_path = string.gsub(payload_path, "\n", "")
-        payload_path = string.gsub(payload_path, "\r", "")
-        backup_path = payload_path..".bak"
-    elseif (not System.doesFileExist(fileName) and not isMenuhax) then
-        payload_path = "/arm9loaderhax.bin"
-        backup_path = payload_path..".bak"
-        return
-    end
+	if (firstTime)
+		if (!System.doesFileExist(fileName)) then
+			configMode = "00"
+			payload_path = "/arm9loaderhax.bin"
+			backup_path = payload_path.."bak"
+		else
+			local file = io.open(fileName, FREAD)
+			local configFile = io.read(file, 0 , io.size(file))
+			if (#configFile == 3) then
+				isMenuhax = configFile:sub(2,2) == "1"
+				ifDev = configFile:sub(3,3) == "1"
+			else
+				payload_path,configMode = configFile:match("([^,]*),([^,]*)")
+				backup_path = payload_path.."bak"
+				if (configMode == nil) then
+					configMode = "00"
+				else
+					isMenuhax = configFile:sub(2,2) == "1"
+					isDev = configFile:sub(3,3) == "1"
+				end
+			end
+		end
+		io.close(file)
+		file = io.open(fileName, FCREATE)
+		io.output(file)
+		io.write(payload_path..","..configMode)
+		firstTime = false
+	else
+		file = io.open(fileName, FCREATE)
+		configFile = io.read(file, 0, io.size())
+		payload_path, configMode = configFile:match("([^,]*),([^,]*)")
+		if isMenuhax then
+			payload_path = "/Luma3DS.dat"
+			backup_path = payload_path..".bak"
+			configMode = "1"..configMode:sub(2,2)
+		else
+			backup_path = payload_path..".bak"
+			configMode = "0"..configMode:sub(2,2)
+
+		if isDev then
+			configMode = configMode:sub(1,1).."1"
+		else
+			configMode = configMode:sub(2,2).."0"
+		end
+		io.close(file)
+		file = io.open(fileName, FCREATE)
+		io.output(file)
+		io.write(payload_path..","..configMode)
+	end
 end
 
 function restoreBackup()
@@ -226,7 +262,7 @@ end
 function main()
     Screen.refresh()
     Screen.clear(TOP_SCREEN)
-    Screen.debugPrint(5,5, "Welcome to the StarUpdater!", yellow, TOP_SCREEN)
+    Screen.debugPrint(5,5, "Welcome to the StarUpdater "..starVer.."!", yellow, TOP_SCREEN)
     Screen.debugPrint(0, curPos, "->", white, TOP_SCREEN)
     Screen.debugPrint(30,20, "Update stable Luma3DS", white, TOP_SCREEN)
     Screen.debugPrint(30,35, "Update unstable Luma3DS", white, TOP_SCREEN)

@@ -8,7 +8,7 @@ local hourlyDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/latest.zip"
 local stableDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/release.zip"
 local payload_path = "/arm9loaderhax.bin"
 if ((not System.doesFileExist(payload_path)) and System.doesFileExist("/arm9loaderhax_si.bin")) then
-	local payload_path = "/arm9loaderhax_si.bin"
+	payload_path = "/arm9loaderhax_si.bin"
 end
 local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"

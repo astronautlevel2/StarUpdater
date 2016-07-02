@@ -248,6 +248,9 @@ main()
 while true do
         pad = Controls.read()
         
+        if Controls.check(pad.KEY_START) and not Controls.check(oldpad,KEY_START) then
+        	System.exit()
+        end	
             
         if Controls.check(pad,KEY_DDOWN) and not Controls.check(oldpad,KEY_DDOWN) then
             if (curPos < 110) then

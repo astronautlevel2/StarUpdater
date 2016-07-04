@@ -30,6 +30,13 @@ local oldpad = pad
 --CIA/3DSX
 local iscia = 1
 
+--Version Info
+local sver = "1.4.0"
+local lver = "???" --This is fetched from the server
+local verserver = "http://gs2012.xyz/3ds/starupdater/version"
+if Network.isWifiEnabled() then
+	lver = Network.requestString(verserver)
+end
 function readConfig(fileName)
     if (isMenuhax) then
         payload_path = "/Luma3DS.dat"
@@ -243,11 +250,13 @@ function main()
     Screen.debugPrint(30,80, "Install mode: "..getMode(menuhaxmode), white, TOP_SCREEN)
     Screen.debugPrint(30,95, "Go back to HBL/Home menu", white, TOP_SCREEN)
     Screen.debugPrint(30,110, "Update the updater", white, TOP_SCREEN)
-    Screen.debugPrint(5,145, "Your Luma3DS version: "..localVer, white, TOP_SCREEN)
+    Screen.debugPrint(5,145, "Your Luma3DS version  : "..localVer, white, TOP_SCREEN)
     Screen.debugPrint(5,160, "Latest Luma3DS version: "..remoteVerNum, white, TOP_SCREEN)
     if (not isMenuhax) then
-        Screen.debugPrint(5, 175, "Install dir: "..payload_path, white, TOP_SCREEN)
+        Screen.debugPrint(5, 175, "Install directory: "..payload_path, white, TOP_SCREEN)
     end
+    Screen.debugPrint(5, 195, "Installed Updater: v."..sver, white, TOP_SCREEN)
+    Screen.debugPrint(5, 210, "Latest Updater   : b."..lver, white, TOP_SCREEN)
     Screen.flip()
 end
 

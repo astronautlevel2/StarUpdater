@@ -7,16 +7,13 @@ local stableUrl = "http://astronautlevel2.github.io/Luma3DS/release.zip"
 local hourlyDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/latest.zip"
 local stableDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/release.zip"
 local payload_path = "/arm9loaderhax.bin"
-if ((not System.doesFileExist(payload_path)) and System.doesFileExist("/arm9loaderhax_si.bin")) then
-	payload_path = "/arm9loaderhax_si.bin"
-end
 local zip_path = "/Luma3DS.zip"
 local backup_path = payload_path..".bak"
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
 local remoteDevCommit = "http://astronautlevel2.github.io/Luma3DSDev/lastCommit"
 local latestCIA = "http://www.ataber.pw/u"
-local latestHBX = "http://gs2012.xyz/3ds/starupdater/latest.zip" -- I'll be hosting it for now, I suppose.
+local latestHBX = "http://gs2012.xyz/3ds/starupdater/index.lua" -- I'll be hosting it for now, I suppose.
 local curPos = 20
 local isMenuhax = false
 local isDev = false
@@ -28,7 +25,7 @@ local pad = Controls.read()
 local oldpad = pad
 
 --CIA/3DSX
-local iscia = 1
+local iscia = 0
 
 --Version Info
 local sver = "1.4.0"
@@ -50,7 +47,11 @@ function readConfig(fileName)
         payload_path = string.gsub(payload_path, "\r", "")
         backup_path = payload_path..".bak"
     elseif (not System.doesFileExist(fileName) and not isMenuhax) then
-        payload_path = "/arm9loaderhax.bin"
+		if System.doesFileExist("/arm9loaderhax_si.bin") and (not System.doesFileExist("/arm9loaderhax.bin")) then
+			payload_path = "/arm9loaderhax_si.bin"
+		else
+			payload_path = "/arm9loaderhax.bin"
+		end
         backup_path = payload_path..".bak"
         return
     end
@@ -98,9 +99,9 @@ end
 function getMode(mode)
     if mode == menuhaxmode then
         if (isMenuhax) then
-            return "Menuhax"
+            return "MenuHax"
         else
-            return "a9lh"
+            return "Arm9LoaderHax"
         end
     else
         if (isDev) then
@@ -256,7 +257,7 @@ function main()
         Screen.debugPrint(5, 175, "Install directory: "..payload_path, white, TOP_SCREEN)
     end
     Screen.debugPrint(5, 195, "Installed Updater: v."..sver, white, TOP_SCREEN)
-    Screen.debugPrint(5, 210, "Latest Updater   : b."..lver, white, TOP_SCREEN)
+    Screen.debugPrint(5, 210, "Latest Updater   : v."..lver, white, TOP_SCREEN)
     Screen.flip()
 end
 
@@ -265,7 +266,7 @@ main()
 while true do
         pad = Controls.read()
         
-        if Controls.check(pad.KEY_START) and not Controls.check(oldpad,KEY_START) then
+        if Controls.check(pad,KEY_START) and not Controls.check(oldpad,KEY_START) then
         	System.exit()
         end	
             
@@ -314,15 +315,10 @@ while true do
                 	System.deleteFile("/Updater.CIA")
                 	System.exit()
                 else
-                	Screen.(TOP_SCREEN)
-                	Screen.debugPrint(5, 5, "Downloading new 3DSX...", yellow, TOP_SCREEN)
-                	Network.downloadFile(latestHBX, "/StarUpdater.zip")
-                	Screen.debugPrint(5,35, "Extacting new files...", yellow, TOP_SCREEN)
-                	System.deleteFile("/3ds/StarUpdater/StarUpdater.smdh")
-                	System.deleteFile("/3ds/StarUpdater/index.lua")
-                	System.deleteFile("/3ds/StarUpdater/StarUpdater.3dsx")
-                	System.extractZIP("/StarUpdater.zip","/")
-                	System.deletefile("/StarUpdater.zip")
+                	Screen.clear(TOP_SCREEN)
+                	Screen.debugPrint(5, 5, "Downloading new script...", yellow, TOP_SCREEN)
+					System.deleteFile("/3ds/StarUpdater/index.lua")
+                	Network.downloadFile(latestHBX, "/3ds/StarUpdater/index.lua")
                 	System.exit()
             	end	
 

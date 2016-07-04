@@ -16,6 +16,7 @@ local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
 local remoteDevCommit = "http://astronautlevel2.github.io/Luma3DSDev/lastCommit"
 local latestCIA = "http://www.ataber.pw/u"
+local latestHBX = "http://gs2012.xyz/3ds/starupdater/latest.zip" -- I'll be hosting it for now, I suppose.
 local curPos = 20
 local isMenuhax = false
 local isDev = false
@@ -25,6 +26,9 @@ local remoteVerNum = ""
 
 local pad = Controls.read()
 local oldpad = pad
+
+--CIA/3DSX
+local iscia = 1
 
 function readConfig(fileName)
     if (isMenuhax) then
@@ -290,14 +294,28 @@ while true do
             elseif (curPos == 95) then
                 System.exit()
             elseif (curPos == 110) then
-                Screen.clear(TOP_SCREEN)
-                Screen.debugPrint(5, 5, "Downloading new CIA...", yellow, TOP_SCREEN)
-                Network.downloadFile(latestCIA, "/Updater.CIA")
-                sleep(2000)
-                Screen.debugPrint(5, 20, "Installing CIA...", yellow, TOP_SCREEN)
-                System.installCIA("/Updater.CIA", SDMC)
-                System.deleteFile("/Updater.CIA")
-                System.exit()
+            	if iscia == 1 then
+                	Screen.clear(TOP_SCREEN)
+        		Screen.debugPrint(5, 5, "Downloading new CIA...", yellow, TOP_SCREEN)
+       			Network.downloadFile(latestCIA, "/Updater.CIA")
+                	sleep(2000)
+                	Screen.debugPrint(5, 20, "Installing CIA...", yellow, TOP_SCREEN)
+                	System.installCIA("/Updater.CIA", SDMC)
+                	System.deleteFile("/Updater.CIA")
+                	System.exit()
+                else
+                	Screen.(TOP_SCREEN)
+                	Screen.debugPrint(5, 5, "Downloading new 3DSX...", yellow, TOP_SCREEN)
+                	Network.downloadFile(latestHBX, "/StarUpdater.zip")
+                	Screen.debugPrint(5,35, "Extacting new files...", yellow, TOP_SCREEN)
+                	System.deleteFile("/3ds/StarUpdater/StarUpdater.smdh")
+                	System.deleteFile("/3ds/StarUpdater/index.lua")
+                	System.deleteFile("/3ds/StarUpdater/StarUpdater.3dsx")
+                	System.extractZIP("/StarUpdater.zip","/")
+                	System.deletefile("/StarUpdater.zip")
+                	System.exit()
+            	end	
+
             end
         end
         oldpad = pad

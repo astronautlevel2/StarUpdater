@@ -176,9 +176,10 @@ function update(site)
     Screen.waitVblankStart()
     Screen.flip()
     if Network.isWifiEnabled() then
+    	Screen.debugPrint(5,5, "Downloading file...", yellow, TOP_SCREEN)
         Network.downloadFile(site, zip_path)
-        Screen.debugPrint(5,5, "File downloaded!", green, TOP_SCREEN)
-        Screen.debugPrint(5,20, "Backing up payload", yellow, TOP_SCREEN)
+        Screen.debugPrint(5,15, "File downloaded!", green, TOP_SCREEN)
+        Screen.debugPrint(5,35, "Backing up payload", yellow, TOP_SCREEN)
         if (System.doesFileExist(backup_path)) then
             System.deleteFile(backup_path)
         end
@@ -187,18 +188,18 @@ function update(site)
         end
         if (isMenuhax == false) then
             System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", payload_path)
-            Screen.debugPrint(5,35, "Moving to payload location...", yellow, TOP_SCREEN)
+            Screen.debugPrint(5,50, "Moving to payload location...", yellow, TOP_SCREEN)
             System.deleteFile(zip_path)
-            Screen.debugPrint(5,50, "Changing path for reboot patch", yellow, TOP_SCREEN)
+            Screen.debugPrint(5,65, "Changing path for reboot patch", yellow, TOP_SCREEN)
             path_changer()
         elseif (isMenuhax == true) then
-            Screen.debugPrint(5,35, "Moving to payload location...", yellow, TOP_SCREEN)
+            Screen.debugPrint(5,50, "Moving to payload location...", yellow, TOP_SCREEN)
             System.extractFromZIP(zip_path, "out/Luma3DS.dat", "/Luma3DS.dat")
             System.deleteFile(zip_path)
         end
-        Screen.debugPrint(5,65, "Done!", green, TOP_SCREEN)
-        Screen.debugPrint(5,80, "Press START to go back to HBL/Home menu", green, TOP_SCREEN)
-        Screen.debugPrint(5,95, "Press SELECT to reboot", green, TOP_SCREEN)
+        Screen.debugPrint(5,80, "Done!", green, TOP_SCREEN)
+        Screen.debugPrint(5,95, "Press START to go back to HBL/Home menu", green, TOP_SCREEN)
+        Screen.debugPrint(5,110, "Press SELECT to reboot", green, TOP_SCREEN)
         while true do
             pad = Controls.read()
             if Controls.check(pad,KEY_START) then

@@ -26,6 +26,11 @@ local oldpad = pad
 
 --CIA/3DSX
 local iscia = 0
+if System.checkBuild() == 2 then
+	iscia = 0
+else
+	iscia = 1
+end
 local isofficial = 1
 
 if isofficial == 0 then

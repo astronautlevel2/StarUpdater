@@ -26,7 +26,16 @@ local oldpad = pad
 
 --CIA/3DSX
 local iscia = 0
+if System.checkBuild() == 2 then
+	iscia = 0
+else
+	iscia = 1
+end
+local isofficial = 1
 
+if isofficial == 0 then
+	latestCIA = "http://gs2012.xyz/3ds/starupdater/latest.zep"
+end
 --Version Info
 local sver = "1.4.0"
 local lver = "???" --This is fetched from the server

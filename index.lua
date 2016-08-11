@@ -1,19 +1,37 @@
+-- StarUpdater
+
+-- Colours
 local white = Color.new(255,255,255)
 local yellow = Color.new(255,205,66)
 local red = Color.new(255,0,0)
 local green = Color.new(55,255,0)
+
+-- Luma3DS URLs
 local hourlyUrl = "http://astronautlevel2.github.io/Luma3DS/latest.zip"
 local stableUrl = "http://astronautlevel2.github.io/Luma3DS/release.zip"
 local hourlyDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/latest.zip"
 local stableDevUrl = "http://astronautlevel2.github.io/Luma3DSDev/release.zip"
-local payload_path = "/arm9loaderhax.bin"
-local zip_path = "/Luma3DS.zip"
-local backup_path = payload_path..".bak"
+
 local remoteVer = "http://astronautlevel2.github.io/Luma3DS/lastVer"
 local remoteCommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit"
 local remoteDevCommit = "http://astronautlevel2.github.io/Luma3DSDev/lastCommit"
-local latestCIA = "http://www.ataber.pw/u"
-local latestHBX = "http://www.ataber.pw/uhbl"
+
+-- Additional Paths
+local payload_path = "/arm9loaderhax.bin"
+local zip_path = "/Luma3DS.zip"
+local backup_path = payload_path..".bak"
+
+-- StarUpdater URLs
+local latestCIA = "http://www.ataber.pw/u" -- Unofficial URL is: http://gs2012.xyz/3ds/starupdater/latest.zep
+local latestHBX = "http://www.ataber.pw/uhbl" -- Unofficial URL is: http://gs2012.xyz/3ds/starupdater/index.lua
+local verserver = "http://www.ataber.pw/ver" -- Unofficial URL http://gs2012.xyz/3ds/starupdater/version
+
+-- Version Info
+local sver = "1.4.0"
+local lver = "???" --This is fetched from the server
+
+
+
 local curPos = 20
 local isMenuhax = false
 local isDev = false
@@ -32,10 +50,7 @@ else
 	iscia = 1
 end
 
---Version Info
-local sver = "1.4.0"
-local lver = "???" --This is fetched from the server
-local verserver = "http://www.ataber.pw/ver"
+
 if Network.isWifiEnabled() then
 	lver = Network.requestString(verserver)
 end

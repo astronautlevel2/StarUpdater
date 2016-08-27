@@ -143,7 +143,7 @@ end
 function getVer(path)
     if (path ~= "remote") then
       	local searchString = "Luma3DS v"
-      	local verString = ""
+      	local verString = "v"
       	local isDone = false
         if (System.doesFileExist(path) == true) then
             local file = io.open(path, FREAD)

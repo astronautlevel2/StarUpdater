@@ -142,7 +142,7 @@ end
 
 function getVer(path)
     if (path ~= "remote") then
-      	local searchString = "Luma3DS "
+      	local searchString = "Luma3DS v"
       	local verString = ""
       	local isDone = false
         if (System.doesFileExist(path) == true) then

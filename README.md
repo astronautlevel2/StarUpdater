@@ -24,5 +24,5 @@ Recent features allow MenuHax support as well. This will always extract it to /L
 ## Credits
  * Thanks to Rinnegatamante for lpp-3ds, which this depends upon
  * Thanks to Aurora Wright for the awesome CFW
- * Thanks to Ericchu for rehosting my payloads in a more usable format
  * Thanks to @squee666, or /u/izylock for making the banner and icon
+ * Thanks to all the contributors, especially gnmmarechal, for helping

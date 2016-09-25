@@ -15,11 +15,8 @@ local url =
 {
 	hourly = "http://astronautlevel2.github.io/Luma3DS/latest.zip",
 	stable = "http://astronautlevel2.github.io/Luma3DS/release.zip",
-	hourlyDev = "http://astronautlevel2.github.io/Luma3DSDev/latest.zip",
-	stableDev = "http://astronautlevel2.github.io/Luma3DSDev/release.zip",
 	remver = "http://astronautlevel2.github.io/Luma3DS/lastVer",
 	remcommit = "http://astronautlevel2.github.io/Luma3DS/lastCommit",
-	remdevcommit = "http://astronautlevel2.github.io/Luma3DSDev/lastCommit"
 }
 
 -- Additional Paths
@@ -34,7 +31,7 @@ local verserver = "http://www.ataber.pw/ver" -- Unofficial URL http://gs2012.xyz
 local svrelverserver = "http://gs2012.xyz/3ds/starupdater/relver" -- Astronaut must replace this with their own URL, as done above
 
 -- Version Info
-local sver = "1.5.0"
+local sver = "1.5.1"
 local lver = "???" --This is fetched from the server
 local relver = 1 -- This is a number that is checked against the server version for mandatory updates. if svrelver > relver, StarUpdater will auto-update.
 local svrelver = 0 -- Fetched from server
@@ -42,8 +39,6 @@ local svrelver = 0 -- Fetched from server
 
 local curPos = 20
 local isMenuhax = false
-local isDev = false
-local menuhaxmode, devmode = 1,2
 local localVer = ""
 local remoteVerNum = ""
 
@@ -134,19 +129,11 @@ function sleep(n)
   while Timer.getTime(timer) - t0 <= n do end
 end
 
-function getMode(mode)
-    if mode == menuhaxmode then
-        if (isMenuhax) then
-            return "MenuHax"
-        else
-            return "Arm9LoaderHax"
-        end
-    else
-        if (isDev) then
-            return "Dev"
-        else
-            return "Regular"
-        end
+function getMode()
+	if (isMenuhax) then
+		return "MenuHax"
+	else
+		return "Arm9LoaderHax"
     end
 end
 
@@ -189,13 +176,9 @@ function getVer(path)
         end
     else
         if Network.isWifiEnabled() then
-        	if (not isDev) then
-            	return Network.requestString(url.remver).."-"..Network.requestString(url.remcommit)
-            else
-            	return Network.requestString(url.remver).."-"..Network.requestString(url.remdevcommit)
-            end
+		return Network.requestString(url.remver).."-"..Network.requestString(url.remcommit)	
         else
-            return "No connection!"
+		return "No connection!"
         end
     end
 end
@@ -241,6 +224,10 @@ function update(site)
         elseif (isMenuhax == true) then
             Screen.debugPrint(5,50, "Moving to payload location...", colors.yellow, TOP_SCREEN)
             System.extractFromZIP(zip_path, "out/Luma3DS.dat", "/Luma3DS.dat")
+            if System.doesFileExist("/arm9loaderhax.bin") then
+		System.deleteFile("/arm9loaderhax.bin")		
+            end
+            System.extractFromZIP(zip_path, "out/arm9loaderhax.bin", "/arm9loaderhax.bin")			
             System.deleteFile(zip_path)
         end
         Screen.debugPrint(5,80, "Done!", colors.green, TOP_SCREEN)
@@ -285,14 +272,13 @@ function main()
     Screen.debugPrint(30,20, "Update to latest Luma3DS", colors.white, TOP_SCREEN)
     Screen.debugPrint(30,35, "Update to Luma3DS hourly", colors.white, TOP_SCREEN)
     Screen.debugPrint(30,50, "Restore a Luma3DS backup", colors.white, TOP_SCREEN)
-    Screen.debugPrint(30,65, "Luma Version: "..getMode(devmode), colors.white, TOP_SCREEN)
-    Screen.debugPrint(30,80, "Install mode: "..getMode(menuhaxmode), colors.white, TOP_SCREEN)
-    Screen.debugPrint(30,95, "Go back to HBL/Home menu", colors.white, TOP_SCREEN)
-    Screen.debugPrint(30,110, "Update the updater", colors.white, TOP_SCREEN)
-    Screen.debugPrint(5,145, "Your Luma3DS version  : "..localVer, colors.white, TOP_SCREEN)
-    Screen.debugPrint(5,160, "Latest Luma3DS version: "..remoteVerNum, colors.white, TOP_SCREEN)
+    Screen.debugPrint(30,65, "Install mode: "..getMode(), colors.white, TOP_SCREEN)
+    Screen.debugPrint(30,80, "Go back to HBL/Home menu", colors.white, TOP_SCREEN)
+    Screen.debugPrint(30,95, "Update the updater", colors.white, TOP_SCREEN)
+    Screen.debugPrint(5,130, "Your Luma3DS version  : "..localVer, colors.white, TOP_SCREEN)
+    Screen.debugPrint(5,145, "Latest Luma3DS version: "..remoteVerNum, colors.white, TOP_SCREEN)
     if (not isMenuhax) then
-        Screen.debugPrint(5, 175, "Install directory: "..payload_path, colors.white, TOP_SCREEN)
+        Screen.debugPrint(5, 160, "Install directory: "..payload_path, colors.white, TOP_SCREEN)
     end
     Screen.debugPrint(5, 195, "Installed Updater: v."..sver, colors.white, TOP_SCREEN)
     Screen.debugPrint(5, 210, "Latest Updater   : v."..lver, colors.white, TOP_SCREEN)
@@ -321,29 +307,18 @@ while true do
 				end
 			elseif Controls.check(pad,KEY_A) and not Controls.check(oldpad,KEY_A) then
 				if (curPos == 20) then
-					if (not isDev) then
-						update(url.stable)
-					else
-						update(url.stableDev)
-					end
+					update(url.stable)
 				elseif (curPos == 35) then
-					if (not isDev) then
-						update(url.hourly)
-					else
-						update(url.hourlyDev)
-					end
+					update(url.hourly)
 				elseif (curPos == 50) then
 					restoreBackup()
 				elseif (curPos == 65) then
-					isDev = not isDev
-					main()
-				elseif (curPos == 80) then
 					isMenuhax = not isMenuhax
 					init()
 					main()
-				elseif (curPos == 95) then
+				elseif (curPos == 80) then
 					System.exit()
-				elseif (curPos == 110) then
+				elseif (curPos == 95) then
 					if iscia == 1 then
 						Screen.clear(TOP_SCREEN)
 					Screen.debugPrint(5, 5, "Downloading new CIA...", colors.yellow, TOP_SCREEN)

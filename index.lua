@@ -231,12 +231,12 @@ function update(site)
 			if System.doesFileExist("/3ds/Luma3DS/luma-up.smdh") then
 				System.deleteFile("/3ds/Luma3DS/luma-up.smdh")
 			end
-            System.extractFromZIP(zip_path, "out/menuhax/3ds/Luma3DS/Luma3DS.3dsx", "/3ds/Luma3DS/luma-up.3dsx")
+            System.extractFromZIP(zip_path, "out/hax/3ds/Luma3DS/Luma3DS.3dsx", "/3ds/Luma3DS/luma-up.3dsx")
 			if System.doesFileExist("/3ds/Luma3DS/Luma3DS.3dsx") then
 				System.deleteFile("/3ds/Luma3DS/Luma3DS.3dsx")
 			end
 			System.renameFile("/3ds/Luma3DS/luma-up.3dsx", "/3ds/Luma3DS/Luma3DS.3dsx")
-            System.extractFromZIP(zip_path, "out/menuhax/3ds/Luma3DS/Luma3DS.smdh", "/3ds/Luma3DS/luma-up.smdh")			
+            System.extractFromZIP(zip_path, "out/hax/3ds/Luma3DS/Luma3DS.smdh", "/3ds/Luma3DS/luma-up.smdh")			
 			if System.doesFileExist("/3ds/Luma3DS/Luma3DS.smdh") then
 				System.deleteFile("/3ds/Luma3DS/Luma3DS.smdh")
 			end

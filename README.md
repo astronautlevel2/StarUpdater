@@ -7,6 +7,8 @@
 
 This is a simple updater for Luma3DS. It uses LPP-3DS in order to work, and it is available as both a 3DSX and a CIA.
 
+NOTE: This is discontinued and will not work with Luma3DS 6.1.3 or newer for menuhax. It should still work for arm9loaderhax, but no promises.
+
 ## Usage
 
 Usage is simple: Either copy the 3DS folder onto the root of your SD and then use the Homebrew Launcher, or just install the CIA.
